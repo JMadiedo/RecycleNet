@@ -13,14 +13,16 @@ def train():
     model = Net()
     model = model.to(device)
 
+    lossFile = open("loss.txt", "a+")
+
     train_loader = dataset.get_train_loader(batch_size, augmented_training_data)
     num_train_batches = len(train_loader)
     val_loader = dataset.get_val_loader(batch_size)
-    num_val_batches = len(val_loader)
+    num_val_batches = len(val_loader)   
 
-    #Binary Cross Entropy Loss
+    loss_list = []
     criterion = CrossEntropyLoss().to(device)
-    optimizer = RMSprop(model.parameters(), lr=0.07)
+    optimizer = RMSprop(model.parameters(), lr=learning_rate)
     model.train()
 
     epoch = 1
@@ -29,7 +31,7 @@ def train():
             print('Current learning rate: ' + str(param_group['lr']))
         model.train()
         for batch_num, (inputs, labels) in enumerate(train_loader, 1):
-            print("train batch_num: ", batch_num)
+            # print("train batch_num: ", batch_num)
             inputs = inputs.view(inputs.size(0), inputs.size(3),inputs.size(1),inputs.size(2))
             inputs, labels = inputs.to(device), labels.to(device)
 
@@ -45,7 +47,7 @@ def train():
                 print('[%d:%.2f] loss: %.3f' % (
                     epoch, batch_num*1.0/num_train_batches,
                     loss.item()
-                    ))
+                    ))      
         epoch += 1
 
         print("evaluating model!")
@@ -54,7 +56,7 @@ def train():
             for batch_num, (inputs, labels) in enumerate(val_loader, 1):
                 inputs = inputs.view(inputs.size(0), inputs.size(3),inputs.size(1),inputs.size(2))
                 inputs, labels = inputs.to(device), labels.to(device)
-                print("val batch_num: ", batch_num)
+                # print("val batch_num: ", batch_num)
 
                 outputs = model(inputs).to(device) 
                 loss = criterion(outputs, labels)
@@ -64,8 +66,11 @@ def train():
                             epoch-1, batch_num*1.0/num_val_batches,
                             loss.item()
                             ))
+                    loss_list.append(loss.item())
     # save after every epoch
+    print(loss_list)
     torch.save(model.state_dict(), path)
+    lossFile.close()
 
 if __name__ == '__main__':
     print('Starting training')

@@ -61,11 +61,8 @@ class RecycleDataset(Dataset):
 
 train_dataset = RecycleDataset("train")
 augmented_train_dataset = RecycleDataset("train", True)
-
 val_dataset = RecycleDataset("val")
 test_dataset = RecycleDataset("test")
-debug_dataset = RecycleDataset("debug")
-
 
 def get_train_loader(batch_size, augmented = False):
     dataset = augmented_train_dataset if augmented == True else train_dataset
@@ -80,14 +77,3 @@ def get_test_loader(batch_size):
         return torch.utils.data.DataLoader(
             test_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
 
-def get_debug_loader(batch_size):
-        return torch.utils.data.DataLoader(
-            debug_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
-
-# if __name__ == '__main__':
-#     debug_loader = get_debug_loader(1)
-#     for batch_num, (inputs, labels) in enumerate(debug_loader, 1):
-#         pass
-#         # print("train batch_num: ", batch_num)
-#         # print("inputs: ", inputs)
-#         # print("labels: ", labels)

@@ -32,7 +32,6 @@ class Net(Module):
             Linear(64*2*2, 64),
             Dropout(),
             Linear(64, 4),
-            # Dropout()
         )
 
     # Defining the forward pass    

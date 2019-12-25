@@ -9,7 +9,7 @@ def test():
     # setup the device for running
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model = Net()
-    model.load_state_dict(torch.load(path))
+    model.load_state_dict(torch.load(path+ "_"+str(learning_rate)))
     model = model.to(device)
 
     test_loader = dataset.get_test_loader(batch_size)
@@ -28,11 +28,12 @@ def test():
             _, predicted = torch.max(outputs.data, 1)
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
+            accuracy = (100 * correct / total)
 
             if batch_num % test_output_period == 0:
                 print('[%d:%.2f] accuracy: %d %%' % (
                     1, batch_num*1.0/num_test_batches,
-                    (100 * correct / total)
+                    accuracy
                     ))
 
 if __name__ == '__main__':
