@@ -1,7 +1,7 @@
 from datetime import date, timedelta
 
 num_epochs = 6
-learning_rate = 0.006
+learning_rate = 0.3
 output_period = 10
 test_output_period = 1
 batch_size = 50

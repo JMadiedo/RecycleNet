@@ -30,30 +30,12 @@ class RecycleDataset(Dataset):
         return self.original_length*5 if self.augmented == True else self.original_length
 
     def __getitem__(self, idx):
-        operator = 0
-        if (idx > self.original_length-1) :
-            new_idx = idx % self.original_length
-            operator = math.floor(idx/self.original_length)
-            idx = new_idx
-
         category = self.data_frame.iloc[idx, 1]
 
         img_name = os.path.join(self.root_dir, "dataset-resized",categories[category],
                                 self.data_frame.iloc[idx, 0])
         image = io.imread(img_name)
-
         toReturn = image
-        if operator == 1:
-            rotated = rotate(image, angle=45, mode = 'wrap')
-            toReturn = np.array(255*rotated, dtype = 'uint8')
-        elif operator == 2:
-            toReturn = np.fliplr(image).copy()
-        elif operator == 3:
-            toReturn = np.flipud(image).copy()
-        elif operator == 4:
-            noisy = random_noise(image,var=0.2**2)
-            toReturn = np.array(255*noisy, dtype = 'uint8')
-
         image = toReturn
         image = image.astype(np.float32)
         image = torch.from_numpy(image)

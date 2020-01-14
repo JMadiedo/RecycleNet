@@ -15,22 +15,18 @@ class Net(Module):
         self.cnn_layers = Sequential(
             Conv2d(3, 32, kernel_size=3, stride=2),
             ReLU(),
-            BatchNorm2d(32),
             MaxPool2d(kernel_size=2, stride=2),
 
             Conv2d(32, 32, kernel_size=3, stride=2),
             ReLU(),
-            BatchNorm2d(32),
             MaxPool2d(kernel_size=2, stride=2),
 
             Conv2d(32, 64, kernel_size=3, stride=2),
             ReLU(),
-            BatchNorm2d(64),
             MaxPool2d(kernel_size=2, stride=2),
         )
         self.fc = Sequential(
             Linear(64*2*2, 64),
-            Dropout(),
             Linear(64, 4),
         )
 
